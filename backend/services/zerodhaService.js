@@ -33,8 +33,8 @@ class ZerodhaService {
    * @returns {number} Delay in milliseconds
    */
   getRandomDelay() {
-    // Random delay between 3-12 seconds
-    return Math.floor(Math.random() * 9000) + 3000;
+    // No delay - removed for faster performance
+    return 0;
   }
 
   /**
@@ -77,23 +77,7 @@ class ZerodhaService {
    * Add delay between requests to avoid rate limiting
    */
   async addDelay() {
-    const now = Date.now();
-    const timeSinceLastRequest = now - this.lastRequestTime;
-    const minDelay = this.getRandomDelay();
-    
-    if (timeSinceLastRequest < minDelay) {
-      const delay = minDelay - timeSinceLastRequest;
-      console.log(`⏳ Adding delay: ${delay}ms`);
-      await new Promise(resolve => setTimeout(resolve, delay));
-    }
-    
-    // Add human-like behavior: occasional longer pauses
-    if (Math.random() < 0.1) { // 10% chance
-      const extraPause = Math.floor(Math.random() * 10000) + 5000; // 5-15 seconds
-      console.log(`🤔 Human-like pause: ${extraPause}ms`);
-      await new Promise(resolve => setTimeout(resolve, extraPause));
-    }
-    
+    // No delay - removed for faster performance
     this.lastRequestTime = Date.now();
   }
 
@@ -285,10 +269,9 @@ class ZerodhaService {
     } catch (error) {
       console.error(`❌ ${name} request failed:`, error.message);
       
-      // If we get a 429, wait longer and retry once
+      // If we get a 429, retry immediately without delay
       if (error.response?.status === 429) {
-        console.log(`🔄 Rate limited, waiting 10 seconds before retry...`);
-        await new Promise(resolve => setTimeout(resolve, 10000));
+        console.log(`🔄 Rate limited, retrying immediately...`);
         
         try {
           console.log(`🔄 Retrying ${name} request...`);
@@ -467,12 +450,7 @@ class ZerodhaService {
           console.log(`❌ ${endpoint.name} failed`);
         }
         
-        // Add extra delay between different endpoints
-        if (Object.keys(endpoints).length > 1) {
-          const extraDelay = Math.floor(Math.random() * 10000) + 5000; // 5-15 seconds
-          console.log(`⏳ Extra delay between endpoints: ${extraDelay}ms`);
-          await new Promise(resolve => setTimeout(resolve, extraDelay));
-        }
+        // No extra delay - removed for faster performance
         
       } catch (error) {
         console.error(`❌ Error processing ${endpoint.name}:`, error.message);
